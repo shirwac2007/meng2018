@@ -31,7 +31,7 @@
   based on Mikal Hart's twoPortRXExample
 
   This example code is in the public domain.
-first change of gihub
+  first change of gihub
 */
 
 #include <SoftwareSerial.h>
@@ -95,28 +95,27 @@ void readSensor(int index)
     port[index].listen();
     while ((c = readChar(index)) != 0 )
     {
-
       if ( c == 'R')
       {
         while ( nbrChars < 4)
         {
           c = readChar(index);
-          if ( c == 0)
-            break;
-          // Serial.write(c);
+          if ( c == 0) {
+            allsensorData = allsensorData + "0,";
+            return;
+          }
           allsensorData += String(c);
           nbrChars++;
         }
-        // Serial.print(" ");
-         allsensorData = allsensorData + ",";
-
+        allsensorData = allsensorData + ",";
         return;
       }
     }
+   
   }
   // here only if sensor not connected
-  allsensorData = allsensorData + ",0";
-  //allsensorData += ", ";
+ allsensorData = allsensorData + "0,";
+ 
 }
 
 char readChar(int index)
