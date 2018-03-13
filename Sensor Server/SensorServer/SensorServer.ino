@@ -34,8 +34,6 @@ void loop() {
   sensorData = MagaData();
   String AngleData = "";
 
-  AngleData += "Angles  ";
-
   AngleData += String(roll);
   AngleData += ", ";
   AngleData += String(pitch);
