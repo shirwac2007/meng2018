@@ -5,7 +5,6 @@
 
 SoftwareSerial megaIn(10, 11); // RX, TX
 
-unsigned long microsPerReading, microsPrevious;
 unsigned long messageCounter = 0; // number of messages sent
 float roll, pitch, heading ;
 String  sensorData = "";
@@ -19,15 +18,6 @@ void setup() {
   megaIn.begin(9600);
   jyBegin();
 
-  //intilizing the IMU and its variables
-
-
-  // initialize variables to pace updates to correct rate
-  microsPerReading = 1000000 / 4;
-  microsPrevious = micros();
-  //this means that it reads 25 times a second
-
-
 
   // set the data rate for the SoftwareSerial port
   megaIn.begin(9600);
@@ -38,68 +28,64 @@ void setup() {
 void loop() {
   float roll, pitch, heading;
   // check if it's time to read data and update the filter
-  if (micros() - microsPrevious >= microsPerReading) {
-    microsPrevious = micros(); //reset the micros time counter
-    getAngles( roll, pitch, heading);
-    String sensorData = "";
-    sensorData = MagaData();
-    String AngleData = "";
 
-    AngleData += "Angles  ";
+  getAngles( roll, pitch, heading);
+  String sensorData = "";
+  sensorData = MagaData();
+  String AngleData = "";
 
-    AngleData += String(roll);
-    AngleData += ", ";
-    AngleData += String(pitch);
-    AngleData += ", ";
-    AngleData += String(heading);
-    AngleData += ",";
+  AngleData += "Angles  ";
 
-    Serial.println( sensorData + AngleData);
-    messageCounter++;
-    delay(1000);
-    
-  }
+  AngleData += String(roll);
+  AngleData += ", ";
+  AngleData += String(pitch);
+  AngleData += ", ";
+  AngleData += String(heading);
+  AngleData += ",";
+
+  Serial.println( sensorData + AngleData);
+  messageCounter++;
+  delay(1000);
 }
 
 
-
+// wait till data is availabe and return distance data string
 String MagaData()
-{ // run over and over
+{
   sensorData = "";
-{ while (megaIn.available() > 0) {
-      char received = megaIn.read();
-      if (received == '\n') //String  sensorData= Serial.readString();
-      {
-        break;
-      }
-      sensorData += received ;
-    }
-    return (String)sensorData;
-  }
-}
+  while (true)
+  {
+    char c = readChar();
 
-
-String GetSensorData() {
-  String  sensorDatak = "";
-  while (megaIn.available())
-  { String textMessage = megaIn.readString();
-    //Serial.println(textMessage);
-    if (megaIn.find("H"))
+    if ( c == 'H')
     {
-      while (megaIn.available())
+      while (true)
       {
-        char inChar = megaIn.read();
-        sensorDatak += inChar;
-        if (inChar == '\n')
+        char received = readChar();
+        if (received == '\n')
         {
-        }       return (String)textMessage;
-
-
+          break;
+        }
+        else if (received != 0)
+        {
+          sensorData += received ;
+        }
       }
+      return (sensorData );
     }
   }
 }
-void getAngles(float& roll, float& pitch, float& heading)
+
+//it returns char if availble else zero 
+char readChar()
+{
+  if ( megaIn.available() > 0) {
+    return megaIn.read();
+  }
+  return 0; 
+}
+
+void getAngles(float & roll, float & pitch, float & heading)
 {
   static short data[4];
   jyGetAngle(data);

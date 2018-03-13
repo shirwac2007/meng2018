@@ -1,37 +1,16 @@
 /*
-  Software serial multple serial test
-
-  Receives from the two software serial ports,
-  sends to the hardware serial port.
-
-  In order to listen on a software port, you call port.listen().
-  When using two software serial ports, you have to switch ports
-  by listen()ing on each one in turn. Pick a logical time to switch
-  ports, like the end of an expected transmission, or when the
-  buffer is empty. This example switches ports when there is nothing
-  more to read from a port
+  Distance sensor
+  recieves six sensor values using software serial.
+  
 
   The circuit:
-  Two devices which communicate serially are needed.
-   First serial device's TX attached to digital pin 10(RX), RX to pin 11(TX)
-   Second serial device's TX attached to digital pin 8(RX), RX to pin 9(TX)
+Six maxbotic distance sensors are connected to software sirial ports . 
 
-  Note:
-  Not all pins on the Mega and Mega 2560 support change interrupts,
-  so only the following can be used for RX:
-  10, 11, 12, 13, 50, 51, 52, 53, 62, 63, 64, 65, 66, 67, 68, 69
-
-  Not all pins on the Leonardo support change interrupts,
-  so only the following can be used for RX:
-  8, 9, 10, 11, 14 (MISO), 15 (SCK), 16 (MOSI).
-
-  created 18 Apr. 2011
-  modified 19 March 2016
-  by Tom Igoe
-  based on Mikal Hart's twoPortRXExample
-
-  This example code is in the public domain.
-  first change of gihub
+the six software serial ports are held in an array so that the can be itrated 
+  
+ 
+  created  oct 2017
+ 
 */
 
 #include <SoftwareSerial.h>
@@ -80,7 +59,7 @@ void loop() {
   } delay(1000);
   // Serial.println();
 }
-
+// the purpose of this function is to read the sensor data and added to the allsensorData varible.
 void readSensor(int index)
 {
   int nbrChars = 0; // how many digits read from sensor
@@ -129,8 +108,10 @@ char readChar(int index)
   return 0; // no sensor connected
 }
 
+// the purose of this function is to return true if sensor connected
 boolean isSensorConnected(int index)
 {
+  // the port will return high if sensor connected.
   return digitalRead(FIRST_CTRL_PORT + index) == HIGH;
 }
 
