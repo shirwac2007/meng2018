@@ -31,7 +31,7 @@ void loop() {
 
   getAngles( roll, pitch, heading);
   String sensorData = "";
-  sensorData = MagaData();
+  sensorData = MegaData();
   String AngleData = "";
 
   AngleData += String(roll);
@@ -41,14 +41,14 @@ void loop() {
   AngleData += String(heading);
   AngleData += ",";
 
-  Serial.println( sensorData + AngleData);
+  Serial.println( "H," + sensorData + AngleData);
   messageCounter++;
   delay(1000);
 }
 
 
 // wait till data is availabe and return distance data string
-String MagaData()
+String MegaData()
 {
   sensorData = "";
   while (true)
