@@ -13,7 +13,7 @@ import math
 from sensor_input import SensorInput
 from controller_input import ControllerInput
 
-settling_interval = .1 # seconds between command and measurement
+settling_interval = 2 # seconds between command and measurement
 
 """
   data from sensors is: 6 lengths in mm followed by roll pitch yaw in degrees
@@ -95,7 +95,7 @@ class InputInterface(object):
                     expected_values[idx] = math.degrees( expected_values[idx])
                  error_values.append(expected_values[idx] - sensor_data[idx])
             outstring = ','.join([str(i) for i in error_values])
-            print outstring
+            print "outstring", outstring
             if self.outfile:
                 self.outfile.write(str(outstring)+"\n")
         else:

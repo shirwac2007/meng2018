@@ -9,7 +9,7 @@ import os
 from Queue import Queue
 import traceback
 
-port = "COM31"
+port = "COM6"
 
 class SensorInput(object):
 
@@ -39,6 +39,7 @@ class SensorInput(object):
             msg = None
             while self.msgQ.qsize() > 0:
                 msg = self.msgQ.get()
+                print "queue=", msg			
             sensor_data = self.msg_to_floats(msg, "H", 9)
             return sensor_data
 
@@ -49,7 +50,7 @@ class SensorInput(object):
                 fields = msg.split(",")
                 if fields[0] == header:
                     data = [float(f) for f in list(fields[1:nbr_fields+1])]
-                    #  print msg[0], ['%.2f' % elem for elem in data]
+                    # print msg[0], ['%.2f' % elem for elem in data]
                     return data
             except:
                 #  print error if input not a string or cannot be converted into valid request
